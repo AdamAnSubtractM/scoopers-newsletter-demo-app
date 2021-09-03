@@ -7,7 +7,7 @@ const port = 3000
 app.use(express.json())
 app.use(cors())
 
-let orderNumber = 1;
+let orderNumber = 100;
 
 const subscribers = new Map()
 const orders = new Map()
@@ -51,7 +51,7 @@ const fulfillOrder = () => {
             let subscriber = subscribers.get(order.subscriberId);
             if (subscriber) {
                 let msg = {
-                    body: 'Your pint of ' + order.flavorName + ' is ready at the Pickup Window.',
+                    body: 'Your pint of ' + order.flavorName + ' is ready.  Order #' + key,
                     icon: "imgs/notification.png",
                     actions: [
                         { action: "accept", title: "I'm coming!" },

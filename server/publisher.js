@@ -32,27 +32,7 @@ const notifyOrderComplete = (subscriber, msgDetails) => {
 }
 
 
-//part of original training module
-const notify = (subscribers) => {
-
-    if (subscribers.size < 1) {
-        console.log("No subscribers to notify");
-        return;
-    }
-
-    subscribers.forEach((subscriber, id) => {
-        webPush.sendNotification(
-            subscriber,
-            "Message goes here",
-            options
-        )
-            .then(() => console.log(subscribers.size + ' subscribers notified'))
-        .catch(error => console.error("Error in pushing notification", error))
-    })
-    
-}
 
 module.exports = {
-    notify: notify,
     notifyOrderComplete: notifyOrderComplete
 }
