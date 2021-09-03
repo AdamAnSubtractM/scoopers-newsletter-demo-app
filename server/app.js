@@ -72,6 +72,6 @@ setInterval(() => {
     if (orders.size > 0) console.log(orders);
     if (subscribers.size > 0) console.log('Current Subscriber Count: ' + subscribers.size);
     fulfillOrder();
-}, 10000)
+}, 30000)
 
-app.listen(port, () => console.log('Server App is running at http://localhost:' + port))
+app.listen(port, () => console.log('Server App is running on port ' + port))

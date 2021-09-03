@@ -3,7 +3,7 @@ const client = (() => {
     let serviceWorkerRegObj = undefined;
     let isUserSubscribed = false;
 
-    const serverDomain = 'http://localhost:3000';
+    const serverDomain = 'http://localhost:3000';  //TODO
     const appServerPublicKey = "BDcYnW5jjE7udhOj8D95s1nkRBBGekNvpd1nJGK0x1xiPmgrJabLYty-cKhM19BoAX73QV22X8C3BQcRHhRy7I8";
 
     const pushButton = document.getElementById("btn-push");
