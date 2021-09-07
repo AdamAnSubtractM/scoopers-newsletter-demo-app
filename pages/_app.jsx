@@ -74,6 +74,9 @@ const GlobalStyles = createGlobalStyle`${css`
       color: var(--color-text);
     }
   }
+  h1 {
+    font-size: 4rem;
+  }
 `}`;
 
 function MyApp({ Component, pageProps }) {

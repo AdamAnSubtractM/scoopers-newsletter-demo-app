@@ -21,7 +21,8 @@
     "react-modal": "^3.14.3",
     "react-responsive-carousel": "^3.2.21",
     "sanitize.css": "^12.0.1",
-    "styled-components": "^5.3.1"
+    "styled-components": "^5.3.1",
+    "web-push": "^3.4.5"
   },
   "devDependencies": {
     "@types/react": "^17.0.19",

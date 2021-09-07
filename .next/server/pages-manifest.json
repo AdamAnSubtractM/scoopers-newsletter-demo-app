@@ -2,6 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/icecream-truck": "pages/icecream-truck.js",
-  "/": "pages/index.js"
+  "/": "pages/index.js",
+  "/icecream-truck": "pages/icecream-truck.js"
 }
