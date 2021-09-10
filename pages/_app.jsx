@@ -26,6 +26,7 @@ const GlobalStyles = createGlobalStyle`${css`
     --color-text: #f2f2f2;
     --color-accent: #282828;
     --color-accent-light: #333;
+    --color-gray: #ccc;
     --font-main: 'Bangers', cursive;
     --size-extra-space: 20px;
     --size-header-height: 50px;
@@ -33,6 +34,10 @@ const GlobalStyles = createGlobalStyle`${css`
     --size-button-radius: 2rem;
     --text-shadow: 1px 1px 1px var(--color-accent-light);
     --text-shadow-contrast: 1px 1px 1px #ffa0a0;
+    --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    --box-shadow-raised: 0 14px 28px rgba(0, 0, 0, 0.25),
+      0 10px 10px rgba(0, 0, 0, 0.22);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
   html {
     background: rgb(248, 131, 112);
