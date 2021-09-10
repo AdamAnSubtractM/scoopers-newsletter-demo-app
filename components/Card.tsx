@@ -13,6 +13,10 @@ const StyledCard = styled.section`
   h5 {
     font-size: 2rem;
   }
+  .img-wrapper {
+    display: flex;
+    justify-content: center;
+  }
 `;
 type CardProps = { children: React.ReactNode };
 

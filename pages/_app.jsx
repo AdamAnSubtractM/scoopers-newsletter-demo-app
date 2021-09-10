@@ -77,6 +77,12 @@ const GlobalStyles = createGlobalStyle`${css`
   h1 {
     font-size: 4rem;
   }
+  h2 {
+    font-size: 3rem;
+  }
+  h3 {
+    font-size: 2.2rem;
+  }
 `}`;
 
 function MyApp({ Component, pageProps }) {
