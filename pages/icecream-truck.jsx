@@ -7,7 +7,7 @@ import Button from '../components/Button';
 import Card from '../components/Card';
 import { StyledGridContainer } from '../styles/GridContainer';
 import { sizes } from '../helpers/contants';
-import blackCherry from '../public/black-cherry.png';
+import whitehouse from '../public/whitehouse.png';
 import imageComingSoon from '../public/image-coming-soon.png';
 import vanilla from '../public/vanilla.png';
 import cherryCordial from '../public/cherry-cordial.png';
@@ -56,7 +56,7 @@ export default function IcecreamTruck() {
       name: 'Black Cherry',
       price: `$5.50`,
       desc: `(Pink) vanilla with black cherrry chunks.`,
-      img: blackCherry,
+      img: imageComingSoon,
       cta: `Reserve`,
       onClick: () => console.log(`black cherry`),
     },
@@ -104,7 +104,7 @@ export default function IcecreamTruck() {
       name: 'WhiteHouse',
       price: `$5.50`,
       desc: `(White) vanilla with Maraschino cherrry chunks.`,
-      img: imageComingSoon,
+      img: whitehouse,
       cta: `Reserve`,
       onClick: () => console.log(`whitehouse`),
     },

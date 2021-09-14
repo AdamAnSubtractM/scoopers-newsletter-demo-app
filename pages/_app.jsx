@@ -53,10 +53,12 @@ const GlobalStyles = createGlobalStyle`${css`
   header,
   footer {
     padding: var(--gutter);
+    a {
+      font-size: 1.5rem;
+    }
   }
   a {
     color: var(--color-accent);
-    font-size: 1.5rem;
     letter-spacing: 1px;
     cursor: pointer;
     text-shadow: var(--text-shadow-contrast);
@@ -87,6 +89,16 @@ const GlobalStyles = createGlobalStyle`${css`
   }
   h3 {
     font-size: 2.2rem;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 p {
+    a {
+      font-size: inherit;
+    }
   }
 `}`;
 

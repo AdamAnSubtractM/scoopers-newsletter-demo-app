@@ -16,10 +16,22 @@ const StyledButton = styled.button`
   &:hover {
     background: var(--color-accent-light);
   }
+  &:disabled {
+    background: var(--color-accent-light);
+    cursor: default;
+  }
 `;
 
-type ButtonProps = { children: React.ReactNode; onClick: (x?: any) => any };
+type ButtonProps = {
+  children: React.ReactNode;
+  onClick: (x?: any) => any;
+  disabled: boolean;
+};
 
-export default function Button({ children, onClick }: ButtonProps) {
-  return <StyledButton onClick={onClick}>{children}</StyledButton>;
+export default function Button({ children, onClick, disabled }: ButtonProps) {
+  return (
+    <StyledButton onClick={onClick} disabled={disabled}>
+      {children}
+    </StyledButton>
+  );
 }

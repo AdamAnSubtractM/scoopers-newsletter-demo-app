@@ -1,8 +1,10 @@
+/* eslint-disable react/display-name */
 /* eslint-disable no-console */
 import Head from 'next/head';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import styled from 'styled-components';
 import Link from 'next/link';
+import { useState } from 'react';
 import Button from '../components/Button';
 import IcecreamCarousel from '../components/IcecreamCarousel';
 import { useNotifications } from '../hooks';
@@ -56,7 +58,17 @@ const StyledCarousel = styled.div`
 `;
 
 export default function Home() {
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const { isNotificationStatus } = useNotifications();
+  const defaultMsg = {
+    heading: `The best place to stay updated on Scoopers' latest flavors and releases!`,
+    body: () => (
+      <>
+        Visit <Link href="/icecream-truck">our icecream truck</Link> page to
+        view our current menu and deals.
+      </>
+    ),
+  };
 
   return (
     <div className="container">
@@ -72,41 +84,36 @@ export default function Home() {
           alignItems="flex-start"
         >
           <StyledIntro>
-            {isNotificationStatus && isNotificationStatus !== 'blocked' && (
+            {isNotificationStatus !== 'denied' && (
               <>
                 <h2>
                   {isNotificationStatus === 'granted'
                     ? `Stay up to date with our latest flavors and releases!`
-                    : `The best place to stay updated on Scoopers' latest flavors and releases!`}
+                    : defaultMsg.heading}
                 </h2>
                 <p>
                   {isNotificationStatus === 'granted'
                     ? `Click the subscribe button to recieve notifications when we release new flavors or have great deals.`
-                    : `Visit ${(
-                        <Link href="/icecream-truck">our icecream truck</Link>
-                      )} page to view our current menu and deals.`}
+                    : defaultMsg.body()}
                 </p>
               </>
             )}
-            {isNotificationStatus === 'blocked' && (
+            {isNotificationStatus === 'denied' && (
               <>
                 <h2>
                   Get the most out of Scoopers' Newsletter by allowing
                   notifications. We'll keep you updated on our latest flavors
                   and releases!
                 </h2>
-                <p>
-                  Visit $<Link href="/icecream-truck">our icecream truck</Link>{' '}
-                  page to view our current menu and deals.
-                </p>
+                <p>{defaultMsg.body()}</p>
               </>
             )}
             {isNotificationStatus === 'granted' && (
               <div className="button-wrap">
                 <Button
-                  onClick={() =>
+                  onClick={() => {
                     showNotification(`Thanks for subscribing!`, {
-                      body: `We will send important updates that look like this. Select "options" to see more info!`,
+                      body: `We will send important updates that look like this. Select this notification to see more info!`,
                       icon: `icecream-logo.png`,
                       actions: [
                         {
@@ -115,10 +122,16 @@ export default function Home() {
                         },
                         { action: `close`, title: `Dismiss` },
                       ],
-                    })
-                  }
+                    });
+                    setIsSubscribed(true);
+                  }}
+                  disabled={isSubscribed ? 'disabled' : null}
                 >
-                  Subscribe to Updates
+                  {isSubscribed
+                    ? `${String.fromCharCode(
+                        10004
+                      )} - You are subscribed to updates`
+                    : `Subscribe to Updates`}
                 </Button>
               </div>
             )}
