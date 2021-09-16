@@ -1,17 +1,17 @@
-import Image from 'next/image';
 import Head from 'next/head';
+import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
-import { StyledFlexContainer } from '../styles/FlexContainer';
 import Button from '../components/Button';
 import Card from '../components/Card';
-import { StyledGridContainer } from '../styles/GridContainer';
 import { sizes } from '../helpers/contants';
-import whitehouse from '../public/whitehouse.png';
-import imageComingSoon from '../public/image-coming-soon.png';
-import vanilla from '../public/vanilla.png';
 import cherryCordial from '../public/cherry-cordial.png';
+import imageComingSoon from '../public/image-coming-soon.png';
 import mexicanChocolate from '../public/mexican-chocolate.png';
+import vanilla from '../public/vanilla.png';
+import whitehouse from '../public/whitehouse.png';
+import { StyledFlexContainer } from '../styles/FlexContainer';
+import { StyledGridContainer } from '../styles/GridContainer';
 
 const StyledIcecreamPage = styled.div`
   h1 {

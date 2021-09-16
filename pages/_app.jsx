@@ -1,17 +1,14 @@
 /* eslint-disable global-require */
 /* eslint-disable no-console */
 /* eslint-disable react/prop-types */
-import App from 'next/app';
-import 'sanitize.css';
-import styled, { createGlobalStyle, css } from 'styled-components';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import 'sanitize.css';
+import styled, { createGlobalStyle, css } from 'styled-components';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import { StyledMaxContainer } from '../styles/MaxContainer';
 import { useNotifications } from '../hooks';
-import { subscribedUsersOnTheServer } from '../helpers';
+import { StyledMaxContainer } from '../styles/MaxContainer';
 
 const StyledPageWrapper = styled.main`
   min-height: calc(100vh - 100px - 20px);

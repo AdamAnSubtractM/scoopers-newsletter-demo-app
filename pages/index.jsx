@@ -1,15 +1,15 @@
 /* eslint-disable react/display-name */
 /* eslint-disable no-console */
 import Head from 'next/head';
+import Link from 'next/link';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import styled from 'styled-components';
-import Link from 'next/link';
 import Button from '../components/Button';
-import UnsubscribeButton from '../components/UnsubscribeButton';
 import IcecreamCarousel from '../components/IcecreamCarousel';
+import UnsubscribeButton from '../components/UnsubscribeButton';
+import { sizes } from '../helpers/contants';
 import { useNotifications } from '../hooks';
 import { StyledFlexContainer } from '../styles/FlexContainer';
-import { sizes } from '../helpers/contants';
 
 const StyledIntro = styled.div`
   max-width: 800px;
