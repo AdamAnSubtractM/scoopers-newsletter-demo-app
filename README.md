@@ -37,7 +37,7 @@ npm i
 * In the root directory of this project run `./node_modules/.bin/web-push generate-vapid-keys`
 * Copy these keys to a safe place as we will need them in the following steps
 * Copy the `sampleenv.local` file and rename it to `.env.local`. This is ignored by git for security reasons
-* Update `VAPID_PUBLIC_KEY` to have a value of the public key we generated in the previous steps
+* Update `NEXT_PUBLIC_VAPID_PUBLIC_KEY` to have a value of the public key we generated in the previous steps
 * Update `VAPID_PRIVATE_KEY` to have a value of the private key we generated in the previous steps
 
 ### Start the App

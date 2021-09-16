@@ -58,7 +58,8 @@ export const useNotifications = function () {
 
   // subscribe the user with the service worker and then also on the server
   const subscribeUser = () => {
-    const appServerPubKey = process.env.VAPID_PUBLIC_KEY;
+    const appServerPubKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+    console.log({ appServerPubKey });
     const parsedKeyAsArray = urlB64ToUint8Array(appServerPubKey);
     serviceWorkerObjRef.current.pushManager
       .subscribe({
