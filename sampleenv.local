@@ -1,0 +1,2 @@
+VAPID_PUBLIC_KEY=<your-generated-public-key>
+VAPID_PRIVATE_KEY=<your-generated-private-key>

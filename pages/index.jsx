@@ -4,12 +4,11 @@ import Head from 'next/head';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import styled from 'styled-components';
 import Link from 'next/link';
-import { useState } from 'react';
 import Button from '../components/Button';
+import UnsubscribeButton from '../components/UnsubscribeButton';
 import IcecreamCarousel from '../components/IcecreamCarousel';
 import { useNotifications } from '../hooks';
 import { StyledFlexContainer } from '../styles/FlexContainer';
-import { showNotification } from '../helpers';
 import { sizes } from '../helpers/contants';
 
 const StyledIntro = styled.div`
@@ -58,8 +57,8 @@ const StyledCarousel = styled.div`
 `;
 
 export default function Home() {
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const { isNotificationStatus } = useNotifications();
+  const { isNotificationStatus, isSubscribed, setIsSubscribed } =
+    useNotifications();
   const defaultMsg = {
     heading: `The best place to stay updated on Scoopers' latest flavors and releases!`,
     body: () => (
@@ -112,17 +111,17 @@ export default function Home() {
               <div className="button-wrap">
                 <Button
                   onClick={() => {
-                    showNotification(`Thanks for subscribing!`, {
-                      body: `We will send important updates that look like this. Select this notification to see more info!`,
-                      icon: `icecream-logo.png`,
-                      actions: [
-                        {
-                          action: `icecream-truck`,
-                          title: `See Our Latest Updates`,
-                        },
-                        { action: `close`, title: `Dismiss` },
-                      ],
-                    });
+                    // showNotification(`Thanks for subscribing!`, {
+                    //   body: `We will send important updates that look like this. Select this notification to see more info!`,
+                    //   icon: `icecream-logo.png`,
+                    //   actions: [
+                    //     {
+                    //       action: `icecream-truck`,
+                    //       title: `See Our Latest Updates`,
+                    //     },
+                    //     { action: `close`, title: `Dismiss` },
+                    //   ],
+                    // });
                     setIsSubscribed(true);
                   }}
                   disabled={isSubscribed ? 'disabled' : null}
@@ -133,6 +132,11 @@ export default function Home() {
                       )} - You are subscribed to updates`
                     : `Subscribe to Updates`}
                 </Button>
+                {isSubscribed ? (
+                  <UnsubscribeButton onClick={() => setIsSubscribed(false)}>
+                    Unsubscribe
+                  </UnsubscribeButton>
+                ) : null}
               </div>
             )}
           </StyledIntro>

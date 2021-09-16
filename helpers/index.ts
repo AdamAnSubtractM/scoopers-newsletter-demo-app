@@ -57,3 +57,6 @@ export const showNotification = (title, options) => {
     .getRegistration()
     .then((registration) => registration.showNotification(title, options));
 };
+
+// TODO verify if this is the best way to do this?
+export const subscribedUsersOnTheServer = new Map();

@@ -2,6 +2,6 @@
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
-  "/icecream-truck": "pages/icecream-truck.js",
+  "/api/addSubscriberToServer": "pages/api/addSubscriberToServer.js",
   "/": "pages/index.js"
 }

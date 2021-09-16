@@ -8,21 +8,19 @@
 //   }
 // });
 
-// self.addEventListener('push', (event) => {
-//   const data = event.data.text();
-//   const options = JSON.parse(data);
-
-//   event.waitUntil(
-//     self.registration.showNotification('Your Order is ready!', options)
-//   );
-// });
-
 // self.addEventListener('notificationclose', (e) => {
 //   console.log(`notification close`, e);
 // });
-
+// listen for a notification click
 self.addEventListener('notificationclick', (e) => {
   if (e.action === 'icecream-truck') {
     clients.openWindow(`/${e.action}`);
   }
+});
+// listen for a push event from the server
+self.addEventListener('push', (e) => {
+  const data = e.data.text();
+  const options = JSON.parse(data);
+
+  e.waitUntil(self.registration.showNotification('Server Push !!!', options));
 });

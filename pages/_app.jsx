@@ -1,13 +1,17 @@
+/* eslint-disable global-require */
 /* eslint-disable no-console */
 /* eslint-disable react/prop-types */
-// import App from "next/app";
+import App from 'next/app';
 import 'sanitize.css';
 import styled, { createGlobalStyle, css } from 'styled-components';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { StyledMaxContainer } from '../styles/MaxContainer';
+import { useNotifications } from '../hooks';
+import { subscribedUsersOnTheServer } from '../helpers';
 
 const StyledPageWrapper = styled.main`
   min-height: calc(100vh - 100px - 20px);
@@ -103,6 +107,18 @@ const GlobalStyles = createGlobalStyle`${css`
 `}`;
 
 function MyApp({ Component, pageProps }) {
+  const { notifySubscribedUsers } = useNotifications();
+
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     console.log({ subscribedUsersOnTheServer });
+  //   }, 5000);
+
+  //   // setInterval(() => {
+  //   // notifySubscribedUsers(subscribedUsersOnTheServer);
+  //   // }, 30000);
+  // });
+
   return (
     <>
       <GlobalStyles />
@@ -147,12 +163,20 @@ function MyApp({ Component, pageProps }) {
 // every single page in your application. This disables the ability to
 // perform automatic static optimization, causing every page in your app to
 // be server-side rendered.
-//
-// MyApp.getInitialProps = async (appContext: AppContext) => {
+
+// MyApp.getInitialProps = async (appContext) => {
 //   // calls page's `getInitialProps` and fills `appProps.pageProps`
 //   const appProps = await App.getInitialProps(appContext);
 
-//   return { ...appProps }
+//   return { ...appProps };
+// };
+
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       subscribedUsersOnTheServer: subscribedUsersOnTheServer.size,
+//     }, // will be passed to the page component as props
+//   };
 // }
 
 export default MyApp;
