@@ -31,26 +31,25 @@ export const useNotifications = function () {
   const subscribeUserWithServer = (subscription) =>
     fetch(`/api/addSubscriberToServer`, {
       method: `POST`,
-      body: JSON.stringify(subscription),
+      body: JSON.stringify({ pushSubscription: subscription }),
       headers: {
         'Content-Type': `application/json`,
       },
     });
 
   // unsubscribe a user with the server for notifications
-  const unsubscribeUserWithServer = (id) =>
+  const unsubscribeUserWithServer = (id, subscription) =>
     fetch(`/api/removeSubscriberFromServer`, {
       method: `POST`,
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({ id, pushSubscription: subscription }),
       headers: {
         'Content-Type': `application/json`,
       },
     });
 
-  const notifySubscribedUsers = (subscribers) =>
+  const notifySubscribedUsers = () =>
     fetch(`/api/notifySubscribedUsers`, {
       method: `POST`,
-      body: JSON.stringify({ subscribers }),
       headers: {
         'Content-Type': `application/json`,
       },
@@ -80,9 +79,10 @@ export const useNotifications = function () {
       .getSubscription()
       .then((subscription) => {
         if (subscription) {
-          const subAsString = JSON.stringify(subscription);
-          const subAsObj = JSON.parse(subAsString);
-          unsubscribeUserWithServer(subAsObj.keys.auth);
+          const subscriptionStirng = JSON.stringify(subscription);
+          const subscriptionObject = JSON.parse(subscriptionStirng);
+          const { keys } = subscriptionObject;
+          unsubscribeUserWithServer(keys.auth, subscription);
           return subscription.unsubscribe();
         }
       })
