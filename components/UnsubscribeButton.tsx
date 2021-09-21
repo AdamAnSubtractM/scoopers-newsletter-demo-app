@@ -30,7 +30,11 @@ type ButtonProps = {
   disabled: boolean;
 };
 
-export default function Button({ children, onClick, disabled }: ButtonProps) {
+export default function UnsubscribeButton({
+  children,
+  onClick,
+  disabled,
+}: ButtonProps) {
   return (
     <StyledButton onClick={onClick} disabled={disabled}>
       {children}

@@ -22,16 +22,6 @@ const options = {
   },
 };
 
-// TODO: Delete and pass Arg
-const sampleMsg = {
-  body: `Test Notification`,
-  icon: `favicon.png`,
-  actions: [
-    { action: 'accept', title: "I'm coming!" },
-    { action: 'decline', title: 'Forget it' },
-  ],
-};
-
 const notify = (subscribers) => {
   console.log({ subscribers });
   if (subscribers.size < 1) {
@@ -40,10 +30,24 @@ const notify = (subscribers) => {
   }
 
   subscribers.forEach((subscriber) => {
-    console.log({ subscriber });
+    if (!subscriber.msgDetails) return;
     webpush
-      .sendNotification(subscriber, JSON.stringify(sampleMsg), options)
-      .then(() => console.log(`${subscribers.size} subscribers notified.`))
+      .sendNotification(
+        subscriber,
+        JSON.stringify(subscriber.msgDetails),
+        options
+      )
+      .then(() => {
+        const { auth } = subscriber.keys;
+        console.log(`${subscribers.size} subscribers notified.`);
+        subscribedUsersOnTheServer.set(auth, subscriber);
+      })
+      .then(() => {
+        console.log(
+          `Message Details should have been wiped?`,
+          subscribedUsersOnTheServer
+        );
+      })
       .catch((error) => console.error('Error in pushing notification', error));
   });
 };
@@ -68,6 +72,13 @@ app.prepare().then(() => {
         body.subscribedUsersOnTheServer = subscribedUsersOnTheServer;
         return handle(req, res);
       }
+      case '/api/editSubscriberWithServer': {
+        const { pushSubscription, msgDetails } = body;
+        const id = pushSubscription?.keys?.auth || null;
+        subscribedUsersOnTheServer.set(id, { ...pushSubscription, msgDetails });
+        body.subscribedUsersOnTheServer = subscribedUsersOnTheServer;
+        return handle(req, res);
+      }
       case '/api/notifySubscribedUsers': {
         notify(subscribedUsersOnTheServer);
         return handle(req, res);
@@ -81,4 +92,8 @@ app.prepare().then(() => {
     if (err) throw err;
     console.log(`> Ready on http://localhost:${port}`);
   });
+
+  setInterval(() => {
+    notify(subscribedUsersOnTheServer);
+  }, 30000);
 });

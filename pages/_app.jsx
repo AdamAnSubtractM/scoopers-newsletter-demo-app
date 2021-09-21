@@ -5,10 +5,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import 'sanitize.css';
 import styled, { createGlobalStyle, css } from 'styled-components';
-import { useEffect } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import { useNotifications } from '../hooks';
 import { StyledMaxContainer } from '../styles/MaxContainer';
 
 const StyledPageWrapper = styled.main`
@@ -105,14 +103,6 @@ const GlobalStyles = createGlobalStyle`${css`
 `}`;
 
 function MyApp({ Component, pageProps }) {
-  const { notifySubscribedUsers } = useNotifications();
-
-  useEffect(() => {
-    setInterval(() => {
-      notifySubscribedUsers();
-    }, 30000);
-  });
-
   return (
     <>
       <GlobalStyles />

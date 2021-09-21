@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Button from '../components/Button';
 import IcecreamCarousel from '../components/IcecreamCarousel';
 import UnsubscribeButton from '../components/UnsubscribeButton';
+import { showNotification } from '../helpers';
 import { sizes } from '../helpers/contants';
 import { useNotifications } from '../hooks';
 import { StyledFlexContainer } from '../styles/FlexContainer';
@@ -111,29 +112,33 @@ export default function Home() {
               <div className="button-wrap">
                 <Button
                   onClick={() => {
-                    // showNotification(`Thanks for subscribing!`, {
-                    //   body: `We will send important updates that look like this. Select this notification to see more info!`,
-                    //   icon: `icecream-logo.png`,
-                    //   actions: [
-                    //     {
-                    //       action: `icecream-truck`,
-                    //       title: `See Our Latest Updates`,
-                    //     },
-                    //     { action: `close`, title: `Dismiss` },
-                    //   ],
-                    // });
-                    setIsSubscribed(true);
+                    showNotification(`Thanks for subscribing!`, {
+                      body: `We will send important updates that look like this. Select this notification for more info!`,
+                      icon: `icecream-logo.png`,
+                      actions: [
+                        {
+                          action: `latest`,
+                          title: `Hot Deals`,
+                        },
+                        { action: `close`, title: `Dismiss` },
+                      ],
+                    });
+                    setIsSubscribed({ ...isSubscribed, value: true });
                   }}
-                  disabled={isSubscribed ? 'disabled' : null}
+                  disabled={isSubscribed.value}
                 >
-                  {isSubscribed
+                  {isSubscribed.value
                     ? `${String.fromCharCode(
                         10004
                       )} - You are subscribed to updates`
                     : `Subscribe to Updates`}
                 </Button>
-                {isSubscribed ? (
-                  <UnsubscribeButton onClick={() => setIsSubscribed(false)}>
+                {isSubscribed.value ? (
+                  <UnsubscribeButton
+                    onClick={() =>
+                      setIsSubscribed({ ...isSubscribed, value: false })
+                    }
+                  >
                     Unsubscribe
                   </UnsubscribeButton>
                 ) : null}

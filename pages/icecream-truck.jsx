@@ -4,7 +4,9 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from '../components/Button';
 import Card from '../components/Card';
+import { showNotification } from '../helpers';
 import { sizes } from '../helpers/contants';
+import { useNotifications } from '../hooks';
 import cherryCordial from '../public/cherry-cordial.png';
 import imageComingSoon from '../public/image-coming-soon.png';
 import mexicanChocolate from '../public/mexican-chocolate.png';
@@ -51,6 +53,12 @@ const StyledIcecreamPage = styled.div`
 `;
 
 export default function IcecreamTruck() {
+  const {
+    addToNotificationQueue,
+    isNotificationStatus,
+    isSubscribed,
+    setIsSubscribed,
+  } = useNotifications();
   const saleItems = [
     {
       name: 'Black Cherry',
@@ -58,7 +66,16 @@ export default function IcecreamTruck() {
       desc: `(Pink) vanilla with black cherrry chunks.`,
       img: imageComingSoon,
       cta: `Reserve`,
-      onClick: () => console.log(`black cherry`),
+      onClick: () =>
+        addToNotificationQueue({
+          title: `Black Cherry icecream ready for pickup!`,
+          body: `Your order of Black Cherry icecream is ready for pickup.`,
+          icon: `icecream-logo.png`,
+          actions: [
+            { action: 'accept', title: "I'm coming!" },
+            { action: 'close', title: 'Forget it.' },
+          ],
+        }),
     },
     {
       name: 'Black Forest',
@@ -66,7 +83,16 @@ export default function IcecreamTruck() {
       desc: `Dark chocolate with black cherry chunks, chocolate chips, and marshmallow.`,
       img: imageComingSoon,
       cta: `Reserve`,
-      onClick: () => console.log(`black forest`),
+      onClick: () =>
+        addToNotificationQueue({
+          title: `Black Forest icecream ready for pickup!`,
+          body: `Your order of Black Forest icecream is ready for pickup.`,
+          icon: `icecream-logo.png`,
+          actions: [
+            { action: 'accept', title: "I'm coming!" },
+            { action: 'close', title: 'Forget it.' },
+          ],
+        }),
     },
     {
       name: 'Cherry Cordial',
@@ -74,7 +100,16 @@ export default function IcecreamTruck() {
       desc: `(Pink) vanilla with Maraschino chunks and chocolate chips.`,
       img: cherryCordial,
       cta: `Reserve`,
-      onClick: () => console.log(`cherry cordial`),
+      onClick: () =>
+        addToNotificationQueue({
+          title: `Cherry Cordial icecream ready for pickup!`,
+          body: `Your order of Cherry Cordial icecream is ready for pickup.`,
+          icon: `icecream-logo.png`,
+          actions: [
+            { action: 'accept', title: "I'm coming!" },
+            { action: 'close', title: 'Forget it.' },
+          ],
+        }),
     },
     {
       name: 'Mexican Chocolate',
@@ -82,7 +117,16 @@ export default function IcecreamTruck() {
       desc: `Chocolate with a hint of heat from cinnamon and cayenne.`,
       img: mexicanChocolate,
       cta: `Reserve`,
-      onClick: () => console.log(`mexican chocolate`),
+      onClick: () =>
+        addToNotificationQueue({
+          title: `Mexican Chocolate icecream ready for pickup!`,
+          body: `Your order of Mexican Chocolate icecream is ready for pickup.`,
+          icon: `icecream-logo.png`,
+          actions: [
+            { action: 'accept', title: "I'm coming!" },
+            { action: 'close', title: 'Forget it.' },
+          ],
+        }),
     },
     {
       name: 'Vampire',
@@ -90,7 +134,16 @@ export default function IcecreamTruck() {
       desc: `Dark chocolate with Maraschino chunks and chocolate chips.`,
       img: imageComingSoon,
       cta: `Reserve`,
-      onClick: () => console.log(`vampire`),
+      onClick: () =>
+        addToNotificationQueue({
+          title: `Vampire icecream ready for pickup!`,
+          body: `Your order of Vampire icecream is ready for pickup.`,
+          icon: `icecream-logo.png`,
+          actions: [
+            { action: 'accept', title: "I'm coming!" },
+            { action: 'close', title: 'Forget it.' },
+          ],
+        }),
     },
     {
       name: 'Vanilla',
@@ -98,7 +151,16 @@ export default function IcecreamTruck() {
       desc: `Classic vanilla with Madagascar vanilla bean`,
       img: vanilla,
       cta: `Reserve`,
-      onClick: () => console.log(`vanilla`),
+      onClick: () =>
+        addToNotificationQueue({
+          title: `Vanilla icecream ready for pickup!`,
+          body: `Your order of Vanilla icecream is ready for pickup.`,
+          icon: `icecream-logo.png`,
+          actions: [
+            { action: 'accept', title: "I'm coming!" },
+            { action: 'close', title: 'Forget it.' },
+          ],
+        }),
     },
     {
       name: 'WhiteHouse',
@@ -106,9 +168,19 @@ export default function IcecreamTruck() {
       desc: `(White) vanilla with Maraschino cherrry chunks.`,
       img: whitehouse,
       cta: `Reserve`,
-      onClick: () => console.log(`whitehouse`),
+      onClick: () =>
+        addToNotificationQueue({
+          title: `WhiteHouse icecream ready for pickup!`,
+          body: `Your order of WhiteHouse icecream is ready for pickup.`,
+          icon: `icecream-logo.png`,
+          actions: [
+            { action: 'accept', title: "I'm coming!" },
+            { action: 'close', title: 'Forget it.' },
+          ],
+        }),
     },
   ];
+
   return (
     <div className="container">
       <Head>
@@ -148,7 +220,47 @@ export default function IcecreamTruck() {
                   )}
                   {item.price && <p className="price">{item.price}</p>}
                   {item.cta && (
-                    <Button onClick={item.onClick}>{item.cta}</Button>
+                    <>
+                      {isNotificationStatus === 'granted' && (
+                        <>
+                          {!isSubscribed.value ? (
+                            <Button
+                              onClick={() => {
+                                showNotification(`Subscribed to Updates!`, {
+                                  body: `You can now reserve icecream and will notify you like this when it's ready!`,
+                                  icon: `icecream-logo.png`,
+                                  actions: [
+                                    { action: `close`, title: `Dismiss` },
+                                  ],
+                                });
+                                setIsSubscribed({
+                                  ...isSubscribed,
+                                  value: true,
+                                });
+                              }}
+                            >
+                              Subscribe to Updates to Reserve
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={item.onClick}
+                              disabled={!isSubscribed.value}
+                            >
+                              {item.cta}
+                            </Button>
+                          )}
+                        </>
+                      )}
+                      {isNotificationStatus === 'denied' && (
+                        <p>
+                          Please allow notifications to reserve icecream.
+                          Otherwise, stop by our truck today!
+                        </p>
+                      )}
+                      {!isNotificationStatus && (
+                        <p>Stop by our truck today to reserve!</p>
+                      )}
+                    </>
                   )}
                 </Card>
               ))}

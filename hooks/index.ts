@@ -10,7 +10,10 @@ import {
 
 export const useNotifications = function () {
   const [isNotificationStatus, setIsNotificationStatus] = useState(undefined);
-  const [isSubscribed, setIsSubscribed] = useState(undefined);
+  const [isSubscribed, setIsSubscribed] = useState({
+    value: undefined,
+    msgDetails: undefined,
+  });
   const serviceWorkerObjRef = useRef(undefined);
 
   // function to convert url token into the format required for secure notifications
@@ -28,10 +31,12 @@ export const useNotifications = function () {
   };
 
   // subscribe a user with the server for notifications
-  const subscribeUserWithServer = (subscription) =>
+  const subscribeUserWithServer = (subscription, msgDetails) =>
     fetch(`/api/addSubscriberToServer`, {
       method: `POST`,
-      body: JSON.stringify({ pushSubscription: subscription }),
+      body: JSON.stringify({
+        pushSubscription: { ...subscription, msgDetails },
+      }),
       headers: {
         'Content-Type': `application/json`,
       },
@@ -47,6 +52,17 @@ export const useNotifications = function () {
       },
     });
 
+  // edit a user who is subscribed with the server
+  const editUserWithSever = (id, subscription, msgDetails) => {
+    fetch(`/api/editSubscriberWithServer`, {
+      method: 'POST',
+      body: JSON.stringify({ id, pushSubscription: subscription, msgDetails }),
+      headers: {
+        'Content-Type': `application/json`,
+      },
+    });
+  };
+
   const notifySubscribedUsers = () =>
     fetch(`/api/notifySubscribedUsers`, {
       method: `POST`,
@@ -56,7 +72,7 @@ export const useNotifications = function () {
     });
 
   // subscribe the user with the service worker and then also on the server
-  const subscribeUser = () => {
+  const subscribeUser = (msgDetails) => {
     const appServerPubKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
     console.log({ appServerPubKey });
     const parsedKeyAsArray = urlB64ToUint8Array(appServerPubKey);
@@ -66,7 +82,7 @@ export const useNotifications = function () {
         applicationServerKey: parsedKeyAsArray,
       })
       .then(async (subscription) => {
-        await subscribeUserWithServer(subscription);
+        await subscribeUserWithServer(subscription, msgDetails);
       })
       .catch((err) => {
         console.error(err);
@@ -91,19 +107,22 @@ export const useNotifications = function () {
       });
   };
 
-  // const notifySubscribedUsers = (subscribers, message, options) => {
-  //   if (subscribers.size < 1) {
-  //     console.log(`No Subscribers to notify.`, { subscribers });
-  //     return;
-  //   }
-
-  //   subscribers.forEach((subscriber) => {
-  //     webpush
-  //       .sendNotification(subscriber, message, options)
-  //       .then(() => console.log(`${subscriber.size} subscribers notified.`))
-  //       .catch((err) => console.error(`Error pushing notification`, error));
-  //   });
-  // };
+  // once the user is subscribed, we need to flag them to be notified in certain circumstances
+  const addToNotificationQueue = (msgDetails) => {
+    serviceWorkerObjRef.current.pushManager
+      .getSubscription()
+      .then((subscription) => {
+        if (subscription) {
+          const subscriptionStirng = JSON.stringify(subscription);
+          const subscriptionObject = JSON.parse(subscriptionStirng);
+          const { keys } = subscriptionObject;
+          return editUserWithSever(keys.auth, subscription, msgDetails);
+        }
+      })
+      .catch((err) => {
+        console.error(`Failed to unsubscribe from Push Service.`, err);
+      });
+  };
 
   // when the page loads, see if notifications are supported and then set up the subscription with the service worker and server
   useEffect(() => {
@@ -117,7 +136,7 @@ export const useNotifications = function () {
           .getSubscription()
           .then((subscribed) => {
             const activeSubscription = Boolean(subscribed);
-            setIsSubscribed(activeSubscription);
+            setIsSubscribed({ ...isSubscribed, value: activeSubscription });
           });
       })
       .then(async () => {
@@ -125,23 +144,26 @@ export const useNotifications = function () {
         setIsNotificationStatus(notificationStatus);
       })
       .catch((err) => console.error(err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // rerun the code each time the user subscribes/unsubscribes
   useEffect(() => {
-    console.log({ isSubscribed });
-    if (isSubscribed) {
-      subscribeUser();
-    } else if (isSubscribed !== undefined) {
+    console.log(isSubscribed.value);
+    if (isSubscribed.value) {
+      subscribeUser(isSubscribed.msgDetails);
+    } else if (isSubscribed.value !== undefined) {
       unsubscribeUser();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubscribed]);
+  }, [isSubscribed.value]);
 
   return {
     isNotificationStatus,
     isSubscribed,
+    serviceWorkerObjRef,
     setIsSubscribed,
     notifySubscribedUsers,
+    addToNotificationQueue,
   };
 };
