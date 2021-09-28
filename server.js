@@ -61,7 +61,7 @@ app.prepare().then(() => {
     switch (url) {
       case '/api/addSubscriberToServer': {
         const { pushSubscription } = body;
-        const id = pushSubscription?.keys?.auth || null;
+        const id = pushSubscription ? pushSubscription?.keys?.auth : null;
         subscribedUsersOnTheServer.set(id, pushSubscription);
         body.subscribedUsersOnTheServer = subscribedUsersOnTheServer;
         return handle(req, res);
@@ -74,7 +74,7 @@ app.prepare().then(() => {
       }
       case '/api/editSubscriberWithServer': {
         const { pushSubscription, msgDetails } = body;
-        const id = pushSubscription?.keys?.auth || null;
+        const id = pushSubscription ? pushSubscription?.keys?.auth : null;
         subscribedUsersOnTheServer.set(id, { ...pushSubscription, msgDetails });
         body.subscribedUsersOnTheServer = subscribedUsersOnTheServer;
         return handle(req, res);
