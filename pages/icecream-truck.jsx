@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '../components/Button';
 import Card from '../components/Card';
@@ -180,6 +180,7 @@ export default function IcecreamTruck() {
         }),
     },
   ];
+  const [isReserved, setIsReserved] = useState(false);
 
   return (
     <div className="container">
@@ -202,6 +203,7 @@ export default function IcecreamTruck() {
                 $5.50 each. Reserve yours while its still cold and supplies
                 last!
               </p>
+              <p className="intro-text">Limit 1 per customer.</p>
             </div>
             <StyledGridContainer>
               {saleItems.map((item, idx) => (
@@ -242,12 +244,24 @@ export default function IcecreamTruck() {
                               Subscribe to Updates to Reserve
                             </Button>
                           ) : (
-                            <Button
-                              onClick={item.onClick}
-                              disabled={!isSubscribed.value}
-                            >
-                              {item.cta}
-                            </Button>
+                            <>
+                              {!isReserved ? (
+                                <Button
+                                  onClick={() => {
+                                    setIsReserved(true);
+                                    item.onClick();
+                                  }}
+                                  disabled={!isSubscribed.value}
+                                >
+                                  {item.cta}
+                                </Button>
+                              ) : (
+                                <p>
+                                  You have reached your order limit. We will let
+                                  you know when it's ready for pickup!
+                                </p>
+                              )}
+                            </>
                           )}
                         </>
                       )}

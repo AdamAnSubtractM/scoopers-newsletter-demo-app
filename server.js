@@ -10,6 +10,7 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const subscribedUsersOnTheServer = new Map();
+const notificationQueue = new Map();
 const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
 
@@ -23,32 +24,42 @@ const options = {
 };
 
 const notify = (subscribers) => {
-  console.log({ subscribers });
+  // console.log(
+  //   `Number of subscribed users on the server: ${subscribedUsersOnTheServer.size}.`
+  // );
+  // console.log(
+  //   `Number of subscribed users who need notified: ${subscribers.size}`
+  // );
   if (subscribers.size < 1) {
-    console.log('No subscribers to notify...');
+    // console.log('No subscribers currently need notified.');
     return;
   }
 
-  subscribers.forEach((subscriber) => {
-    if (!subscriber.msgDetails) return;
+  subscribers.forEach((subscriber, idx) => {
+    const { msgDetails, ...subscriberDetails } = subscriber;
+    const { keys } = subscriberDetails;
+    if (!msgDetails) {
+      // console.log(
+      //   `Subscriber ${idx + 1} of ${
+      //     subscribers.size
+      //   } is subscribed to updates but doesn't have any queued messages.`
+      // );
+      return;
+    }
+    if (!subscriberDetails) return;
+    // use the webpush library to send notification by passing in the subscribe, notification details, and options which include the VAPID Keys
     webpush
-      .sendNotification(
-        subscriber,
-        JSON.stringify(subscriber.msgDetails),
-        options
-      )
+      .sendNotification(subscriber, JSON.stringify(msgDetails), options)
       .then(() => {
-        const { auth } = subscriber.keys;
-        console.log(`${subscribers.size} subscribers notified.`);
-        subscribedUsersOnTheServer.set(auth, subscriber);
+        // console.log(
+        //   `Notification should have been sent.`,
+        //   JSON.stringify(subscriber)
+        // );
+        notificationQueue.delete(keys.auth);
       })
-      .then(() => {
-        console.log(
-          `Message Details should have been wiped?`,
-          subscribedUsersOnTheServer
-        );
-      })
-      .catch((error) => console.error('Error in pushing notification', error));
+      .catch((error) =>
+        console.error(`Error in managing the user's notification`, error)
+      );
   });
 };
 
@@ -69,13 +80,14 @@ app.prepare().then(() => {
       case '/api/removeSubscriberFromServer': {
         const { id } = body;
         subscribedUsersOnTheServer.delete(id);
+        notificationQueue.delete(id);
         body.subscribedUsersOnTheServer = subscribedUsersOnTheServer;
         return handle(req, res);
       }
-      case '/api/editSubscriberWithServer': {
+      case '/api/addSubscriberToNotificationQueue': {
         const { pushSubscription, msgDetails } = body;
         const id = pushSubscription?.keys?.auth || null;
-        subscribedUsersOnTheServer.set(id, { ...pushSubscription, msgDetails });
+        notificationQueue.set(id, { ...pushSubscription, msgDetails });
         body.subscribedUsersOnTheServer = subscribedUsersOnTheServer;
         return handle(req, res);
       }
@@ -94,6 +106,6 @@ app.prepare().then(() => {
   });
 
   setInterval(() => {
-    notify(subscribedUsersOnTheServer);
+    notify(notificationQueue);
   }, 30000);
 });

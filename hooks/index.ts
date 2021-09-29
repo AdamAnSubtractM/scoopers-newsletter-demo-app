@@ -52,9 +52,9 @@ export const useNotifications = function () {
       },
     });
 
-  // edit a user who is subscribed with the server
-  const editUserWithSever = (id, subscription, msgDetails) => {
-    fetch(`/api/editSubscriberWithServer`, {
+  // add subscribe user to notification queue
+  const addSubscriberToNotificationQueue = (id, subscription, msgDetails) => {
+    fetch(`/api/addSubscriberToNotificationQueue`, {
       method: 'POST',
       body: JSON.stringify({ id, pushSubscription: subscription, msgDetails }),
       headers: {
@@ -74,7 +74,6 @@ export const useNotifications = function () {
   // subscribe the user with the service worker and then also on the server
   const subscribeUser = (msgDetails) => {
     const appServerPubKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-    console.log({ appServerPubKey });
     const parsedKeyAsArray = urlB64ToUint8Array(appServerPubKey);
     serviceWorkerObjRef.current.pushManager
       .subscribe({
@@ -116,7 +115,11 @@ export const useNotifications = function () {
           const subscriptionStirng = JSON.stringify(subscription);
           const subscriptionObject = JSON.parse(subscriptionStirng);
           const { keys } = subscriptionObject;
-          return editUserWithSever(keys.auth, subscription, msgDetails);
+          return addSubscriberToNotificationQueue(
+            keys.auth,
+            subscription,
+            msgDetails
+          );
         }
       })
       .catch((err) => {
@@ -149,10 +152,11 @@ export const useNotifications = function () {
 
   // rerun the code each time the user subscribes/unsubscribes
   useEffect(() => {
-    console.log(isSubscribed.value);
     if (isSubscribed.value) {
+      console.log(`Is the user currently subscribed?`, isSubscribed.value);
       subscribeUser(isSubscribed.msgDetails);
     } else if (isSubscribed.value !== undefined) {
+      console.log(`Is the user currently subscribed?`, isSubscribed.value);
       unsubscribeUser();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

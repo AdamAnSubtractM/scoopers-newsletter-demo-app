@@ -1,22 +1,31 @@
+/* eslint-disable no-console */
 /* eslint-disable no-undef */
 /* eslint-disable no-restricted-globals */
-// self.addEventListener('notificationclose', (e) => {
-//   console.log(`notification close`, e);
-// });
+
 // listen for a notification click
 self.addEventListener('notificationclick', (e) => {
   // if the action is "latest" then we want to show them the latest deals on our icecream truck page.
   switch (e.action) {
     case 'latest':
+      console.log(
+        `The user selected to view our icecream truck deal from the notification.`
+      );
       clients.openWindow(`/icecream-truck`);
       break;
+    case 'accept':
+      console.log(
+        `User accepted the notification and are on their way to pickup their order!`
+      );
+      e.notification.close();
+      break;
     case 'close':
-      // TODO Make sure this is done
+      console.log(`The user dismissed the notification.`);
       e.notification.close();
       break;
     default:
   }
 });
+
 // listen for a push event from the server
 self.addEventListener('push', (e) => {
   const data = e.data.text();

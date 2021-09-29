@@ -26,7 +26,7 @@ export const registerNotificationServiceWorker = () => {
   return navigator.serviceWorker
     .register(notificationServiceWorkerFile)
     .then((registrationData) => {
-      console.log(`Service Worker Registered.`);
+      console.log(`Notification Service Worker is now Registered.`);
       return registrationData;
     });
 };

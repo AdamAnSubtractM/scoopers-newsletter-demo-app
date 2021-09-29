@@ -4,7 +4,7 @@ This app is intended to be a demo app that is used to demonstrate different feat
 
 ## Live Version
 
-[https://scoopers-newsletter-demo-app.vercel.app/](https://scoopers-newsletter-demo-app.vercel.app/)
+[https://scoopers-newsletter-demo-app-soycm.ondigitalocean.app/](https://scoopers-newsletter-demo-app-soycm.ondigitalocean.app/)
 
 * The GitHub admins have locked us down from being able to add integrations like Vercel for deployment. The workaround was to host this repo on my personal GitHub and hook up Vercel to that repository. The downside is that now I have to push to two repos to keep them in sync.
 
@@ -39,6 +39,11 @@ npm i
 * Copy the `sampleenv.local` file and rename it to `.env.local`. This is ignored by git for security reasons
 * Update `NEXT_PUBLIC_VAPID_PUBLIC_KEY` to have a value of the public key we generated in the previous steps
 * Update `VAPID_PRIVATE_KEY` to have a value of the private key we generated in the previous steps
+
+### Some general notes about the push notifications in this demo
+
+* The app intentionally only allows the user to reserve one icecream at a time because I don't want to bog down my $10 server with uneccessary load. In a real app, ideally, you'd be able to handle multiple notifications
+* If you pull this down locally, you may notice that at times, the push notifications don't always send. This is because we're checking the notification queue every thirty seconds and after a while, the browser may throttle the notifications so that you're not abusing them. Simply shut off the server, completely exit the browser, and restart the browser & server to resolve this
 
 ### Start the App
 
